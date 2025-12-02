@@ -39,28 +39,28 @@ fn part_two() {
         if let Some(first_char) = result.chars().next() {
             let number: i32 = result[1..].parse().unwrap();
 
-            let start = dial;
+            let distance = number.abs();
+            let pos_mod = dial.rem_euclid(100);
 
-            // How many complete 100s do we traverse?
-            let full_cycles = number / 100;
-            let remainder = number % 100;
-
-            // Does the remainder cross 0?
-            let crosses_zero = if first_char == 'R' {
-                (start + remainder) >= 100
-            } else {
-                start < remainder
-            };
-
-            zero_count += full_cycles + if crosses_zero { 1 } else { 0 };
-
-            match first_char {
-                'L' => dial -= number,
-                'R' => dial += number,
+            let mut first = match first_char {
+                'L' => pos_mod,
+                'R' => (100 - pos_mod) % 100,
                 _ => panic!("Invalid direction"),
+            };
+            if first == 0 {
+                first = 100;
             }
 
-            dial = dial.rem_euclid(100);
+            if first <= distance {
+                let extra = (distance - first) / 100;
+                zero_count += 1 + extra;
+            }
+
+            dial = match first_char {
+                'L' => (dial - number).rem_euclid(100),
+                'R' => (dial + number).rem_euclid(100),
+                _ => panic!("Invalid direction"),
+            };
         }
     }
 
