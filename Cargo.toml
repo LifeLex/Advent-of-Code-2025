@@ -16,3 +16,4 @@ name = "day03"
 path = "src/day03.rs"
 
 [dependencies]
+itertools = "0.14.0"
