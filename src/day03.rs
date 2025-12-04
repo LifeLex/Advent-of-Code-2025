@@ -1,11 +1,4 @@
 mod utils;
-
-use std::{
-    cmp::max,
-    f64::DIGITS,
-    ops::{RemAssign, Sub},
-};
-
 use utils::read_file_to_string;
 
 fn part_one() {
