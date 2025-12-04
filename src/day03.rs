@@ -1,5 +1,11 @@
 mod utils;
 
+use std::{
+    cmp::max,
+    f64::DIGITS,
+    ops::{RemAssign, Sub},
+};
+
 use utils::read_file_to_string;
 
 fn part_one() {
@@ -43,8 +49,48 @@ fn part_one() {
     println!("Result: {}", joltage);
 }
 
-fn part_two() {}
+fn part_two() {
+    let input = read_file_to_string("inputs/day03.txt").unwrap();
+    let input_lines = input.lines();
+    let mut joltage = 0;
+    for line in input_lines {
+        let numbers: Vec<u32> = line.chars().filter_map(|c| c.to_digit(10)).collect();
+        println!("Numbers: {:?}", numbers);
+
+        let target_length = 12;
+        let n = numbers.len();
+
+        // Greedy algorithm: build a 12-digit number by selecting the largest digit
+        // at each position that still allows us to complete 12 digits
+        let mut result = String::new();
+        let mut start_idx = 0;
+
+        for position in 0..target_length {
+            let remaining_needed = target_length - position - 1;
+            let search_end = n - remaining_needed;
+
+            // Find the maximum digit in the valid range
+            let mut max_digit = 0;
+            let mut max_idx = start_idx;
+
+            for i in start_idx..search_end {
+                if numbers[i] > max_digit {
+                    max_digit = numbers[i];
+                    max_idx = i;
+                }
+            }
+
+            result.push_str(&max_digit.to_string());
+            start_idx = max_idx + 1;
+        }
+
+        println!("Result: {}", result);
+        joltage += result.parse::<u64>().unwrap();
+    }
+    println!("Joltage: {}", joltage);
+}
 
 fn main() {
-    part_one();
+    // part_one();
+    part_two();
 }
